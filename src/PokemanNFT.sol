@@ -30,7 +30,7 @@ contract PokemanNFT is ERC721, Ownable {
     event Staked(address indexed user, uint256 amount);
     event Unstaked(address indexed user, uint256 amount);
 
-    constructor(address _pokeToken) ERC721("PokemanNFT", "PMN") {
+    constructor(address _pokeToken) ERC721("PokemanNFT", "PMN") Ownable(msg.sender) {
         pokeToken = PokeToken(_pokeToken);
     }
 
@@ -91,10 +91,14 @@ contract PokemanNFT is ERC721, Ownable {
         _safeMint(msg.sender, pokemanId);
         emit PokemanMinted(msg.sender, pokemanId);
     }
+     function approveFromContract(address to, uint256 tokenId) external onlyOwner {
+        require(ownerOf(tokenId) == address(this), "PokemanNFT: NFT not owned by contract");
+        _approve(to, tokenId,address(this));
+    }
 
     // --- Metadata ---
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        require(_exists(tokenId), "PokemanNFT: URI query for nonexistent token");
+        require(_ownerOf(tokenId)!=address(0), "PokemanNFT: URI query for nonexistent token");
         return string(abi.encodePacked(BASE_URI, _toString(tokenId)));
     }
 
@@ -117,4 +121,12 @@ contract PokemanNFT is ERC721, Ownable {
         }
         return string(buffer);
     }
+    function onERC721Received(
+    address,
+    address,
+    uint256,
+    bytes calldata
+) external pure returns (bytes4) {
+    return this.onERC721Received.selector;
+}
 } 

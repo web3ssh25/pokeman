@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./PokemanNFT.sol";
@@ -77,4 +77,12 @@ contract PokemanMarketplace is ReentrancyGuard {
     function isListed(uint256 tokenId) external view returns (bool) {
         return listings[tokenId].seller != address(0);
     }
+     function onERC721Received(
+    address,
+    address,
+    uint256,
+    bytes calldata
+) external pure returns (bytes4) {
+    return this.onERC721Received.selector;
+}
 } 

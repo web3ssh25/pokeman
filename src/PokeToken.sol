@@ -10,7 +10,7 @@ contract PokeToken is ERC20, Ownable {
 
    event BatchAirdrop(address indexed owner, address[] recipients, uint256[] amounts);
 
-    constructor() ERC20("Pokes", "POKE") {
+    constructor() ERC20("Pokes", "POKE") Ownable(msg.sender) {
         _mint(address(this), INITIAL_SUPPLY);
     }
 
