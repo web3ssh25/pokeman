@@ -77,9 +77,9 @@ const UserDashboard: React.FC<Props> = ({ provider, userAddress, refreshKey, han
       const signer = await provider.getSigner();
       const pokeToken = new Contract(POKE_TOKEN_ADDRESS, PokeTokenAbi.abi, signer);
       
-      // Use parseEther for 18-decimal tokens. It's more idiomatic and robust.
-      //const amount = parseEther(stakeInput.toString());
-      //console.log(amount)
+     // Use parseEther for 18-decimal tokens. It's more idiomatic and robust.
+      const amount = parseEther(stakeInput.toString());
+      console.log(stakeInput)
       setStatus('Approving token transfer...');
       const approveTx = await pokeToken.approve(POKEMAN_NFT_ADDRESS, stakeInput);
       await approveTx.wait();
