@@ -36,16 +36,16 @@ contract PokemanMarketplaceTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -55,12 +55,12 @@ contract PokemanMarketplaceTest is Test {
 
         // List the NFT
         vm.prank(alice);
-        marketplace.list(25, 1e4); // 10,000 POKEs
+        marketplace.list(25, 2 ether); 
 
         assertTrue(marketplace.isListed(25));
         (address seller, uint256 price) = marketplace.listings(25);
         assertEq(seller, alice);
-        assertEq(price, 1e4);
+        assertEq(price, 2 ether);
         assertEq(pokemanNFT.ownerOf(25), address(marketplace));
     }
 
@@ -75,13 +75,13 @@ contract PokemanMarketplaceTest is Test {
 
 
         // List the NFT (only owner can list contract-held NFTs)
-        marketplace.list(25, 1e4);
+        marketplace.list(25, 2 ether);
 
         assertTrue(marketplace.isListed(25));
         
         (address seller, uint256 price) = marketplace.listings(25);
         assertEq(seller, address(this));
-        assertEq(price, 1e4);
+        assertEq(price, 2 ether);
         assertEq(pokemanNFT.ownerOf(25), address(marketplace));
     }
 
@@ -89,7 +89,7 @@ contract PokemanMarketplaceTest is Test {
         // Try to list without owning the NFT
         vm.prank(alice);
         vm.expectRevert("ERC721NonexistentToken(25)");
-        marketplace.list(25, 1e4);
+        marketplace.list(25, 2 ether);
     }
 
         function test_List_AlreadyListed() public {
@@ -101,16 +101,16 @@ contract PokemanMarketplaceTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -118,12 +118,12 @@ contract PokemanMarketplaceTest is Test {
         pokemanNFT.approve(address(marketplace), 25);
 
         vm.prank(alice);
-        marketplace.list(25, 1e4);
+        marketplace.list(25, 2 ether);
 
         // Try to list the same NFT again
         vm.prank(alice);
         vm.expectRevert("Already listed");
-        marketplace.list(25, 2e4);
+        marketplace.list(25, 2 ether);
     }
 
       function test_List_ZeroPrice() public {
@@ -135,16 +135,16 @@ contract PokemanMarketplaceTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -164,16 +164,16 @@ contract PokemanMarketplaceTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -181,25 +181,25 @@ contract PokemanMarketplaceTest is Test {
         pokemanNFT.approve(address(marketplace), 25);
 
         vm.prank(alice);
-        marketplace.list(25, 1e4);
+        marketplace.list(25, 2 ether);
 
         // Airdrop POKEs to buyer
         address[] memory buyerRecipients = new address[](1);
         uint256[] memory buyerAmounts = new uint256[](1);
         buyerRecipients[0] = bob;
-        buyerAmounts[0] = 2e4;
+        buyerAmounts[0] = 10 ether;
         pokeToken.batchAirdrop(buyerRecipients, buyerAmounts);
 
         // Buy the NFT
         vm.prank(bob);
-        pokeToken.approve(address(marketplace), 1e4);
+        pokeToken.approve(address(marketplace), 2 ether);
         
         vm.prank(bob);
         marketplace.buy(25);
 
         assertEq(pokemanNFT.ownerOf(25), bob);
-        assertEq(pokeToken.balanceOf(alice), 11e4); // Seller received payment
-        assertEq(pokeToken.balanceOf(bob), 1e4); // Buyer has remaining balance
+        assertEq(pokeToken.balanceOf(alice), 11 ether); // Seller received payment
+        assertEq(pokeToken.balanceOf(bob), 8 ether); // Buyer has remaining balance
         assertFalse(marketplace.isListed(25));
     }
  function test_Buy_NotListed() public {
@@ -217,16 +217,16 @@ contract PokemanMarketplaceTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -234,7 +234,7 @@ contract PokemanMarketplaceTest is Test {
         pokemanNFT.approve(address(marketplace), 25);
 
         vm.prank(alice);
-        marketplace.list(25, 1e4);
+        marketplace.list(25, 2 ether);
 
         // Try to buy own NFT
         vm.prank(alice);
@@ -251,16 +251,16 @@ contract PokemanMarketplaceTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -268,7 +268,7 @@ contract PokemanMarketplaceTest is Test {
         pokemanNFT.approve(address(marketplace), 25);
 
         vm.prank(alice);
-        marketplace.list(25, 1e4);
+        marketplace.list(25, 2 ether);
 
         // Try to buy without enough POKEs
         vm.prank(bob);
@@ -286,16 +286,16 @@ contract PokemanMarketplaceTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -303,7 +303,7 @@ contract PokemanMarketplaceTest is Test {
         pokemanNFT.approve(address(marketplace), 25);
 
         vm.prank(alice);
-        marketplace.list(25, 1e4);
+        marketplace.list(25, 2 ether);
 
         // Cancel the listing
         vm.prank(alice);
@@ -322,16 +322,16 @@ contract PokemanMarketplaceTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -339,7 +339,7 @@ contract PokemanMarketplaceTest is Test {
         pokemanNFT.approve(address(marketplace), 25);
 
         vm.prank(alice);
-        marketplace.list(25, 1e4);
+        marketplace.list(25, 2 ether);
 
         // Try to cancel from different user
         vm.prank(bob);
@@ -358,16 +358,16 @@ contract PokemanMarketplaceTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -375,7 +375,7 @@ contract PokemanMarketplaceTest is Test {
         pokemanNFT.approve(address(marketplace), 25);
 
         vm.prank(alice);
-        marketplace.list(25, 1e4);
+        marketplace.list(25, 2 ether);
 
         assertTrue(marketplace.isListed(25));
     }

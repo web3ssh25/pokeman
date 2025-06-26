@@ -10,14 +10,16 @@ contract PokemanNFT is ERC721, Ownable {
     mapping(uint256 => bool) public minted;
     mapping(uint256 => bool) public availableForMint;
 
+    uint[] public validIDs;
+
     // --- Staking State ---
     mapping(address => uint256) public stakedAmount;
     mapping(address => uint256) public lastMintTime;
     mapping(address => uint256) public stakeTimestamp;
 
     // --- Configurable Parameters ---
-    uint256 public requiredStake = 1e5; // 100,000 POKEs
-    uint256 public coolingPeriod = 1 hours;
+    uint256 public requiredStake = 1 ether; 
+    uint256 public coolingPeriod = 10 minutes;
     PokeToken public pokeToken;
 
     // --- Metadata ---
@@ -40,6 +42,7 @@ contract PokemanNFT is ERC721, Ownable {
             uint256 pokemanId = pokemanIds[i];
             require(!minted[pokemanId], "PokemanNFT: already minted");
             minted[pokemanId] = true;
+            validIDs.push(pokemanIds[i]);
             _safeMint(address(this), pokemanId);
             emit PokemanPreMinted(address(this), pokemanId);
         }
@@ -47,6 +50,7 @@ contract PokemanNFT is ERC721, Ownable {
 
     function setAvailableForMint(uint256[] calldata pokemanIds) external onlyOwner {
         for (uint256 i = 0; i < pokemanIds.length; i++) {
+            validIDs.push(pokemanIds[i]);
             availableForMint[pokemanIds[i]] = true;
             emit PokemanAvailabilitySet(pokemanIds[i]);
         }
@@ -101,6 +105,10 @@ contract PokemanNFT is ERC721, Ownable {
         require(_ownerOf(tokenId)!=address(0), "PokemanNFT: URI query for nonexistent token");
         return string(abi.encodePacked(BASE_URI, _toString(tokenId)));
     }
+
+    function getAllValidIDs() public view returns (uint[] memory) {
+    return validIDs;
+}
 
     // --- Internal Helper ---
     function _toString(uint256 value) internal pure returns (string memory) {

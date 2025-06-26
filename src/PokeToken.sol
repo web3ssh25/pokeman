@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract PokeToken is ERC20, Ownable {
     uint256 public constant MAX_AIRDROP_ADDRESSES = 10;
-    uint256 public constant INITIAL_SUPPLY = 1e18 * 1e18;
+    uint256 public constant INITIAL_SUPPLY = 1e18 ether;
 
    event BatchAirdrop(address indexed owner, address[] recipients, uint256[] amounts);
 

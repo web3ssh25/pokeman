@@ -28,7 +28,7 @@ contract PokemanMarketplaceList is Script {
             // Approve marketplace for each NFT (using helper if needed)
             pokemanNFT.approveFromContract(marketplaceAddress, contractIds[i]);
             // List on marketplace
-            marketplace.list(contractIds[i], 1e4 + i * 1e4); // Prices: 10000, 20000, 30000 POKEs
+            marketplace.list(contractIds[i], (1 ether+i)); 
             console.log("Listed contract-owned NFT ID:", contractIds[i]);
         }
         vm.stopBroadcast();
@@ -40,13 +40,13 @@ contract PokemanMarketplaceList is Script {
 
         vm.startBroadcast(user1Key);       
         pokemanNFT.approve(marketplaceAddress, userIds[0]);
-        marketplace.list(userIds[0], 5e4); 
+        marketplace.list(userIds[0], 3 ether); 
         console.log("Listed user-owned NFT ID:", userIds[0]);   
         vm.stopBroadcast();
 
         vm.startBroadcast(user2Key);       
         pokemanNFT.approve(marketplaceAddress, userIds[1]);
-        marketplace.list(userIds[1], 5e4); 
+        marketplace.list(userIds[1], 4 ether); 
         console.log("Listed user-owned NFT ID:", userIds[1]);   
         vm.stopBroadcast();
     }

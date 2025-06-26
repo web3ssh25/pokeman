@@ -1,0 +1,86 @@
+.user-dashboard {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+  background-color: #f0f4f8;
+  border-radius: 12px;
+  border: 1px solid #dce6f0;
+}
+
+.user-dashboard h3 {
+  text-align: center;
+  color: #4a5568;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.staking-info {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.staking-info p {
+  margin: 0.5rem 0;
+  color: #2d3748;
+  display: flex;
+  justify-content: space-between;
+}
+
+.staking-info strong {
+  color: #2c5282;
+}
+
+.staking-actions .input-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.staking-actions input {
+  flex-grow: 1;
+  padding: 0.75rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.staking-actions button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  color: #fff;
+  background-color: #4299e1;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.staking-actions button:hover:not(:disabled) {
+  background-color: #3182ce;
+}
+
+.staking-actions button:disabled {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+.unstake-button {
+  width: 100%;
+  background-color: #e53e3e !important;
+}
+
+.unstake-button:hover:not(:disabled) {
+  background-color: #c53030 !important;
+}
+
+.user-dashboard .status-message {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: #e2e8f0;
+  border-radius: 6px;
+  color: #4a5568;
+} 

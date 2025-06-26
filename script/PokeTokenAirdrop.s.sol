@@ -24,8 +24,8 @@ contract PokeTokenAirdrop is Script {
         recipients[1] = 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC; // Anvil Account #2
 
         uint256[] memory amounts = new uint256[](2);
-        amounts[0] = 5 * 1e17; // 0.5 POKEs
-        amounts[1] = 5 * 1e17; // 0.5 POKEs
+        amounts[0] = 100 ether; 
+        amounts[1] = 200 ether; 
 
         console.log("Airdropping to %d users...", recipients.length);
         console.log("Balance of %s before: %d", recipients[0], pokeToken.balanceOf(recipients[0]));

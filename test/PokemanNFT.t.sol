@@ -23,8 +23,8 @@ contract PokemanNFTTest is Test {
         assertEq(pokemanNFT.symbol(), "PMN");
         assertEq(pokemanNFT.owner(), owner);
         assertEq(address(pokemanNFT.pokeToken()), address(pokeToken));
-        assertEq(pokemanNFT.requiredStake(), 1e5);
-        assertEq(pokemanNFT.coolingPeriod(), 1 hours);
+        assertEq(pokemanNFT.requiredStake(), 1 ether);
+        assertEq(pokemanNFT.coolingPeriod(), 10 minutes);
     }
 
     function test_PreMint() public {
@@ -33,6 +33,11 @@ contract PokemanNFTTest is Test {
         pokemanIds[1] = 2;
 
         pokemanNFT.preMint(pokemanIds);
+
+        uint256[] memory validIDs = pokemanNFT.getAllValidIDs();
+
+        assertEq(validIDs[0],1);
+        assertEq(validIDs[1],2);
 
         assertEq(pokemanNFT.ownerOf(1), address(pokemanNFT));
         assertEq(pokemanNFT.ownerOf(2), address(pokemanNFT));
@@ -83,42 +88,42 @@ contract PokemanNFTTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5; // 200,000 POKEs
+        amounts[0] = 10 ether; 
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
-        assertEq(pokemanNFT.stakedAmount(alice), 1e5);
-        assertEq(pokeToken.balanceOf(address(pokemanNFT)), 1e5);
+        assertEq(pokemanNFT.stakedAmount(alice), 1 ether);
+        assertEq(pokeToken.balanceOf(address(pokemanNFT)), 1 ether);
     }
 
      function test_Stake_InsufficientAmount() public {
         vm.prank(alice);
         vm.expectRevert("PokemanNFT: stake at least required amount");
-        pokemanNFT.stake(5e4); // 50,000 POKEs (less than required 100,000)
+        pokemanNFT.stake(100000 wei); // 50,000 POKEs (less than required 100,000)
     }
        function test_Stake_AlreadyStaked() public {
         // First airdrop and stake
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 2 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
         // Try to stake again
         vm.prank(alice);
         vm.expectRevert("PokemanNFT: already staked");
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
     }
 
     function test_Mint() public {
@@ -126,20 +131,20 @@ contract PokemanNFTTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 2 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
         uint256[] memory pokemanIds = new uint256[](1);
         pokemanIds[0] = 25;
         pokemanNFT.setAvailableForMint(pokemanIds);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 20 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -154,14 +159,14 @@ contract PokemanNFTTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
         vm.prank(alice);
         vm.expectRevert("PokemanNFT: not available for minting");
@@ -181,14 +186,14 @@ contract PokemanNFTTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
         uint256[] memory pokemanIds = new uint256[](2);
         pokemanIds[0] = 25;
@@ -196,7 +201,7 @@ contract PokemanNFTTest is Test {
         pokemanNFT.setAvailableForMint(pokemanIds);
 
         // First mint
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -206,7 +211,7 @@ contract PokemanNFTTest is Test {
         pokemanNFT.mint(26);
 
         // Wait for cooling period and try again
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         
         vm.prank(alice);
         pokemanNFT.mint(26);
@@ -219,20 +224,20 @@ contract PokemanNFTTest is Test {
         address[] memory recipients = new address[](1);
         uint256[] memory amounts = new uint256[](1);
         recipients[0] = alice;
-        amounts[0] = 2e5;
+        amounts[0] = 10 ether;
         pokeToken.batchAirdrop(recipients, amounts);
 
         vm.prank(alice);
-        pokeToken.approve(address(pokemanNFT), 1e5);
+        pokeToken.approve(address(pokemanNFT), 1 ether);
         
         vm.prank(alice);
-        pokemanNFT.stake(1e5);
+        pokemanNFT.stake(1 ether);
 
         uint256[] memory pokemanIds = new uint256[](1);
         pokemanIds[0] = 25;
         pokemanNFT.setAvailableForMint(pokemanIds);
 
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         vm.prank(alice);
         pokemanNFT.mint(25);
 
@@ -242,13 +247,13 @@ contract PokemanNFTTest is Test {
         pokemanNFT.unstake();
 
         // Wait for cooling period and unstake
-        vm.warp(block.timestamp + 1 hours);
+        vm.warp(block.timestamp + 10 minutes);
         
         vm.prank(alice);
         pokemanNFT.unstake();
 
         assertEq(pokemanNFT.stakedAmount(alice), 0);
-        assertEq(pokeToken.balanceOf(alice), 2e5); // Original 2e5 - staked 1e5 + returned 1e5
+        assertEq(pokeToken.balanceOf(alice), 10 ether); // Original 2e5 - staked 1e5 + returned 1e5
     }
 
      function test_Unstake_NotStaked() public {
@@ -273,12 +278,12 @@ contract PokemanNFTTest is Test {
     }
 
     function test_SetRequiredStake() public {
-        pokemanNFT.setRequiredStake(2e5);
-        assertEq(pokemanNFT.requiredStake(), 2e5);
+        pokemanNFT.setRequiredStake(2 ether);
+        assertEq(pokemanNFT.requiredStake(), 2 ether);
     }
 
     function test_SetCoolingPeriod() public {
-        pokemanNFT.setCoolingPeriod(2 hours);
-        assertEq(pokemanNFT.coolingPeriod(), 2 hours);
+        pokemanNFT.setCoolingPeriod(20 minutes);
+        assertEq(pokemanNFT.coolingPeriod(), 20 minutes);
     }
 }
